@@ -4,7 +4,7 @@
 __all__ = ['Task']
 
 # %% ../nbs/task.ipynb 3
-from .api import MaticaAPIClient
+from .api import ArchivematicaAPIClient
 from .aws import AwsClient
 from typing import Optional
 
@@ -27,7 +27,7 @@ class Task:
             aws_access_key_id (str): AWSアクセスキーID。
             aws_secret_access_key (str): AWSシークレットアクセスキー。
         """
-        self.matica_client = MaticaAPIClient(dashboard_url, dashboard_username, dashboard_api_key,
+        self.matica_client = ArchivematicaAPIClient(dashboard_url, dashboard_username, dashboard_api_key,
                                              storage_service_url, storage_service_username, storage_service_password)
         self.aws_client = AwsClient(aws_access_key_id, aws_secret_access_key, "us-east-1")
 
