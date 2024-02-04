@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "archivematica_tools"
+  site-url: "https://nakamura196.github.io/archivematica_tools"
+  description: ""
+  repo-branch: main
+  repo-url: "https://github.com/nakamura196/archivematica_tools"
