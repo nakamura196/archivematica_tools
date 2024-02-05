@@ -2,3 +2,4 @@ requests
 boto3
 nbdev
 python-dotenv
+tqdm

@@ -8,7 +8,8 @@ import base64
 import requests
 import time
 from requests.auth import HTTPBasicAuth
-from typing import Optional
+from typing import Optional, Dict
+from tqdm import tqdm
 
 # %% ../nbs/api.ipynb 4
 class ArchivematicaAPIClient(object):
@@ -112,6 +113,37 @@ class ArchivematicaAPIClient(object):
                 break
             time.sleep(self.TIME_SPAN)
         return self.sip_uuid
+    
+    def transfer_delete(self, transfer_UUIDs: list) -> list:
+        """
+        Deletes the specified transfers.
+        
+        Args:
+            transfer_UUIDs: The list of transfer UUIDs to delete.
+
+        Returns:
+            The results of the deletion.
+        """
+        results = []
+        for transfer_UUID in transfer_UUIDs:
+            response = requests.delete(f'{self.dashbord_url}/api/transfer/{transfer_UUID}/delete', headers=self.dash_board_headers)
+            results.append(response.json())
+
+        return results
+    
+    def transfer_completed(self) -> Dict:
+        """
+        Checks for completed transfers.
+
+        Returns:
+            The list of completed transfers.
+        """
+
+        response = requests.get(f'{self.dashbord_url}/api/transfer/completed', headers=self.dash_board_headers)
+
+        return response.json()
+
+    ###########
 
     def ingest(self, sip_UUID: str) -> str:
         """
@@ -129,6 +161,105 @@ class ArchivematicaAPIClient(object):
             if "status" in r and r["status"] != "PROCESSING":
                 return r["uuid"]
             time.sleep(self.TIME_SPAN)
+
+    def ingest_delete(self, ingest_UUIDs: list) -> list:
+        """
+        Deletes the specified ingestions.
+
+        Args:
+            ingest_UUIDs: The list of ingest UUIDs to delete.
+
+        Returns:
+            The results of the deletion.
+        """
+        results = []
+        for ingest_UUID in ingest_UUIDs:
+            response = requests.delete(f'{self.dash_board_endpoint}/ingest/{ingest_UUID}/delete', headers=self.dash_board_headers)
+            results.append(response.json())
+
+        return results
+
+    def ingest_completed(self) -> Dict:
+        """
+        Checks for completed ingestions.
+
+        Returns:
+            The list of completed ingestions.
+        """
+
+        response = requests.get(f'{self.dash_board_endpoint}/ingest/completed', headers=self.dash_board_headers)
+
+        return response.json()
+    
+    #####
+
+    def v2_file(self, size:int = 20) -> list:
+        """
+        Retrieves a list of files.
+
+        Args:
+            size: The number of files to retrieve.
+
+        Returns:
+            The list of files.
+        """
+        response = requests.get(f'{self.storage_service_url}/api/v2/file/', auth=HTTPBasicAuth(self.storage_username, self.storage_password), params={"limit": size})
+        return response.json()
+
+    def v2_file_delete_aip(self, file_UUIDs: list, event_reason: str, pipeline: str, user_id: str, user_email: str) -> list:
+        """
+        Deletes the specified files.
+
+        Args:
+            file_UUIDs: The list of file UUIDs to delete.
+            event_reason: The reason for the deletion.
+            pipeline: The pipeline for the deletion.
+            user_id: The user ID for the deletion.
+            user_email: The user email for the deletion.
+
+        Returns:
+            The results of the deletion.
+        """
+        results = []
+        for file_UUID in tqdm(file_UUIDs):
+            response = requests.post(f'{self.storage_service_url}/api/v2/file/{file_UUID}/delete_aip/', auth=HTTPBasicAuth(self.storage_username, self.storage_password), json={
+                "event_reason": event_reason,
+                "pipeline": pipeline,
+                "user_id"   : user_id,
+                "user_email": user_email,
+
+            })
+            results.append(response.json())
+
+        return results
+
+    def v2_file_delete(self, file_UUIDs: list) -> list:
+        """
+        Deletes the specified files.
+
+        Args:
+            file_UUIDs: The list of file UUIDs to delete.
+
+        Returns:
+            The results of the deletion.
+        """
+        results = []
+        for file_UUID in tqdm(file_UUIDs):
+            response = requests.delete(f'{self.storage_service_url}/api/v2/file/{file_UUID}/contents', auth=HTTPBasicAuth(self.storage_username, self.storage_password))
+            res = {
+                "file_UUID": file_UUID,
+            }
+            if(response.status_code == 204):
+                # results.append({"status": "success"})
+                res["status"] = "success"
+            else:
+                # results.append({"status": "failed"})
+                res["status"] = "failed"
+
+            results.append(res)
+
+        return results
+
 
     def get_aip_url(self, ingest_UUID: str) -> str:
         """
