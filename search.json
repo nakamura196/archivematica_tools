@@ -1,0 +1,92 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Archivematica Tools",
+    "section": "",
+    "text": "pip install archivematica_tools",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "Archivematica Tools",
+    "section": "",
+    "text": "pip install archivematica_tools",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "Archivematica Tools",
+    "section": "How to use",
+    "text": "How to use\nSee the documentation for full details of the Archivematica API Client.\n\nfrom dotenv import load_dotenv\nimport os\n\n\nload_dotenv(override=True)\n\ndashboard_url = os.environ.get(\"DASHBOARD_URL\")\ndashboard_username = os.environ.get(\"DASHBOARD_USERNAME\")\ndashboard_api_key = os.environ.get(\"DASHBOARD_API_KEY\")\n\nstorage_service_url = os.environ.get(\"STORAGE_SERVICE_URL\")\nstorage_service_username = os.environ.get(\"STORAGE_SERVICE_USERNAME\")\nstorage_service_password = os.environ.get(\"STORAGE_SERVICE_PASSWORD\")\n\n\nclient = ArchivematicaAPIClient(dashboard_url, dashboard_username, dashboard_api_key, storage_service_url, storage_service_username, storage_service_password)",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "index.html#transfer",
+    "href": "index.html#transfer",
+    "title": "Archivematica Tools",
+    "section": "Transfer",
+    "text": "Transfer\n\ntransfer_UUID = client.v2beta_package(\"standard\", \"\", \"bfe37714-61c2-432e-b375-af9253e114da\", \"/home/archivematica/archivematica-sampledata/SampleTransfers/DemoTransferCSV\", \"transfer v2 demo\", \"automated\")\ntransfer_UUID\n\n'42cb1fb3-e6c5-403d-b7d9-57180746d52b'\n\n\n\nDelete transfers\n\nres_transfer_completed = client.transfer_completed()\nres_transfer_completed\n\n{'results': ['c0e3d7e5-217c-4d01-a4f4-6a9539d148b7'],\n 'message': 'Fetched completed transfers successfully.'}\n\n\n\nres_transfer_delete = client.transfer_delete(res_transfer_completed[\"results\"])\nres_transfer_delete\n\n[{'removed': True}]",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "index.html#ingest",
+    "href": "index.html#ingest",
+    "title": "Archivematica Tools",
+    "section": "Ingest",
+    "text": "Ingest\n\nDelete ingests\n\nres_ingest_completed = client.ingest_completed()\nres_ingest_completed\n\n{'results': ['a6a9f4fb-0499-423a-8a05-fcaa5896ad5d'],\n 'message': 'Fetched completed ingests successfully.'}\n\n\n\nres_ingest_delete = client.ingest_delete(res_ingest_completed[\"results\"])\nres_ingest_delete\n\n[{'removed': True}]",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "index.html#storage-service",
+    "href": "index.html#storage-service",
+    "title": "Archivematica Tools",
+    "section": "Storage Service",
+    "text": "Storage Service\n\nPackage\n\n# res_v2_file = client.v2_file(size=100)\n# res_v2_file\n\n\npipeline = \"628f82bd-4ec2-4643-b85d-fd8e1db84c27\"\nuser_id = 1\nuser_email = \"test@test.com\"\nevent_reason = \"demo\"\n\n\n'''\nfileUUIDs = []\nfor objct in res_v2_file[\"objects\"]:\n    fileUUIDs.append(objct[\"uuid\"])\n\n# res_v2_file_delete = client.v2_file_delete_aip(fileUUIDs, event_reason, pipeline, user_id, user_email)\n# res_v2_file_delete\n'''\n\n\n'''\nfileUUIDs = []\nfor objct in res_v2_file[\"objects\"]:\n    fileUUIDs.append(objct[\"uuid\"])\n\nres_v2_file_delete = client.v2_file_delete(fileUUIDs)\nres_v2_file_delete\n'''\n\n'\\nfileUUIDs = []\\nfor objct in res_v2_file[\"objects\"]:\\n    fileUUIDs.append(objct[\"uuid\"])\\n\\nres_v2_file_delete = client.v2_file_delete(fileUUIDs)\\nres_v2_file_delete\\n'\n\n\nSee the documentation for more examples.\n\nCreated by Satoru Nakamura.",
+    "crumbs": [
+      "Archivematica Tools"
+    ]
+  },
+  {
+    "objectID": "api.html",
+    "href": "api.html",
+    "title": "Archivematica API client",
+    "section": "",
+    "text": "source\n\nArchivematicaAPIClient\n\n ArchivematicaAPIClient (dashboard_url:str, dashboard_username:str,\n                         dashboard_api_key:str, storage_service_url:str,\n                         storage_service_username:str,\n                         storage_service_password:str)\n\nA client for interacting with Matica’s API for file uploading, transferring, and ingesting processes.\nFirst import the ArchivematicaAPIClient class.\nfrom matica_api_client import ArchivematicaAPIClient\nTo initialise the ArchivematicaAPIClient you need to provide the options.\n.env file\nDASHBOARD_URL=http://localhost:62080\nDASHBOARD_USERNAME=test\nDASHBOARD_API_KEY=test\n\nSTORAGE_SERVICE_URL=http://localhost:62081\nSTORAGE_SERVICE_USERNAME=test\nSTORAGE_SERVICE_PASSWORD=test\n# 環境変数を参照\ndashboard_url = os.environ.get(\"DASHBOARD_URL\")\ndashboard_username = os.environ.get(\"DASHBOARD_USERNAME\")\ndashboard_api_key = os.environ.get(\"DASHBOARD_API_KEY\")\n\nstorage_service_url = os.environ.get(\"STORAGE_SERVICE_URL\")\nstorage_service_username = os.environ.get(\"STORAGE_SERVICE_USERNAME\")\nstorage_service_password = os.environ.get(\"STORAGE_SERVICE_PASSWORD\")\n\naws_access_key_id = os.environ.get(\"AWS_ACCESS_KEY_ID\")\naws_secret_access_key = os.environ.get(\"AWS_SECRET_ACCESS_KEY\")\nmatica = ArchivematicaAPIClient(dashboard_url, dashboard_username, dashboard_api_key, storage_service_url, storage_service_username, storage_service_password)\n\n\nTransfer\nInitiates a file transfer process.\n\nsource\n\nArchivematicaAPIClient.v2beta_package\n\n ArchivematicaAPIClient.v2beta_package (transfer_type:str,\n                                        transfer_accession:str,\n                                        location_uuid:str, path:str,\n                                        name:str, processing_config:str)\n\nInitiates a file transfer process.\nArgs: transfer_type: The type of the transfer. transfer_accession: The accession number for the transfer.\nReturns: The directory associated with the transfer.\n\nsource\n\n\nArchivematicaAPIClient.approve_transfer\n\n ArchivematicaAPIClient.approve_transfer (transfer_type:str,\n                                          directory:str)\n\nApproves a file transfer after initiation.\nArgs: transfer_type (str): The type of the transfer. directory (str): The directory associated with the transfer.\nReturns: Optional[str]: The UUID of the approved transfer, if available.\n\nsource\n\n\nArchivematicaAPIClient.check_transfer_status\n\n ArchivematicaAPIClient.check_transfer_status (transfer_UUID:str)\n\nChecks the status of a file transfer until it is no longer processing.\nArgs: transfer_UUID: The UUID of the transfer to check.\nReturns: The SIP UUID of the transfer.\n\nsource\n\n\nArchivematicaAPIClient.transfer_delete\n\n ArchivematicaAPIClient.transfer_delete (transfer_UUIDs:list)\n\nDeletes the specified transfers.\nArgs: transfer_UUIDs: The list of transfer UUIDs to delete.\nReturns: The results of the deletion.\n\nsource\n\n\nArchivematicaAPIClient.transfer_completed\n\n ArchivematicaAPIClient.transfer_completed ()\n\nChecks for completed transfers.\nReturns: The list of completed transfers.\n\n\n\nIngest\n\nsource\n\nArchivematicaAPIClient.ingest\n\n ArchivematicaAPIClient.ingest (sip_UUID:str)\n\nWaits for the ingestion process to complete and returns the UUID of the ingested AIP.\nArgs: sip_UUID: The SIP UUID to ingest.\nReturns: The UUID of the ingested AIP.\n\nsource\n\n\nArchivematicaAPIClient.ingest_delete\n\n ArchivematicaAPIClient.ingest_delete (ingest_UUIDs:list)\n\nDeletes the specified ingestions.\nArgs: ingest_UUIDs: The list of ingest UUIDs to delete.\nReturns: The results of the deletion.\n\nsource\n\n\nArchivematicaAPIClient.ingest_completed\n\n ArchivematicaAPIClient.ingest_completed ()\n\nChecks for completed ingestions.\nReturns: The list of completed ingestions.\n\n\n\nStorage Service\n\nsource\n\nArchivematicaAPIClient.v2_file\n\n ArchivematicaAPIClient.v2_file (size:int=20)\n\nRetrieves a list of files.\nArgs: size: The number of files to retrieve.\nReturns: The list of files.\n\nsource\n\n\nArchivematicaAPIClient.v2_file_delete_aip\n\n ArchivematicaAPIClient.v2_file_delete_aip (file_UUIDs:list,\n                                            event_reason:str,\n                                            pipeline:str, user_id:str,\n                                            user_email:str)\n\nDeletes the specified files.\nArgs: file_UUIDs: The list of file UUIDs to delete. event_reason: The reason for the deletion. pipeline: The pipeline for the deletion. user_id: The user ID for the deletion. user_email: The user email for the deletion.\nReturns: The results of the deletion.\n\nsource\n\n\nArchivematicaAPIClient.v2_file_delete\n\n ArchivematicaAPIClient.v2_file_delete (file_UUIDs:list)\n\nDeletes the specified files.\nArgs: file_UUIDs: The list of file UUIDs to delete.\nReturns: The results of the deletion.\n\nsource\n\n\nArchivematicaAPIClient.get_aip_url\n\n ArchivematicaAPIClient.get_aip_url (ingest_UUID:str)\n\nConstructs and returns the URL for downloading the ingested AIP.\nArgs: ingest_UUID: The UUID of the ingested AIP.\nReturns: The URL for downloading the AIP.\n\nsource\n\n\nArchivematicaAPIClient.get_current_full_path\n\n ArchivematicaAPIClient.get_current_full_path (ingest_UUID:str)\n\nRetrieves the current full path of the ingested AIP by making an API call.\nArgs: ingest_UUID (str): The UUID of the ingested AIP.\nReturns: Optional[str]: The current full path of the AIP if the request is successful, None otherwise.",
+    "crumbs": [
+      "Archivematica API client"
+    ]
+  },
+  {
+    "objectID": "aws.html",
+    "href": "aws.html",
+    "title": "AWS Tools",
+    "section": "",
+    "text": "source\n\nAwsClient\n\n AwsClient (aws_access_key_id:str, aws_secret_access_key:str,\n            region_name:str)\n\nA client for interacting with AWS services, specifically for operations related to Amazon S3.\n\n\nUpload\n\nsource\n\nAwsClient.upload_to_s3\n\n AwsClient.upload_to_s3 (file_path:str, bucket_name:str, object_name:str)\n\nUploads a file to an Amazon S3 bucket.\nArgs: file_path (str): Local path to the file. bucket_name (str): Name of the S3 bucket. object_name (str): Object name in the S3 bucket (i.e., S3 key).\n\n\n\nZip\n\nsource\n\nAwsClient.extract_zip_with_correct_encoding\n\n AwsClient.extract_zip_with_correct_encoding (zip_file_path:str,\n                                              extract_to_path:str,\n                                              encoding:str='cp437')\n\nExtracts a ZIP file with specific encoding for the file names.\nArgs: zip_file_path (str): Path to the ZIP file. extract_to_path (str): Path to extract the ZIP contents to. encoding (str, optional): Encoding to use for file names. Defaults to ‘cp437’.\n\nsource\n\n\nAwsClient.upload_to_s3_zip\n\n AwsClient.upload_to_s3_zip (zip_file_path:str, dst_path:str,\n                             bucket_name:str)\n\nExtracts a ZIP file and uploads its contents to an Amazon S3 bucket.\nArgs: zip_file_path (str): Path to the ZIP file. dst_path (str): Destination path in the S3 bucket. bucket_name (str): Name of the S3 bucket.",
+    "crumbs": [
+      "AWS Tools"
+    ]
+  },
+  {
+    "objectID": "task.html",
+    "href": "task.html",
+    "title": "Task",
+    "section": "",
+    "text": "source\n\nTask\n\n Task (dashboard_url:str, dashboard_username:str, dashboard_api_key:str,\n       storage_service_url:str, storage_service_username:str,\n       storage_service_password:str, aws_access_key_id:str,\n       aws_secret_access_key:str)\n\nTask クラスのコンストラクタ。Matica APIとAWS S3クライアントの初期化を行う。\nArgs: dashboard_url (str): MaticaダッシュボードのURL。 dashboard_username (str): Maticaダッシュボードのユーザー名。 dashboard_api_key (str): MaticaダッシュボードのAPIキー。 storage_service_url (str): ストレージサービスのURL。 storage_service_username (str): ストレージサービスのユーザー名。 storage_service_password (str): ストレージサービスのパスワード。 aws_access_key_id (str): AWSアクセスキーID。 aws_secret_access_key (str): AWSシークレットアクセスキー。\n\n\nMain\n\nsource\n\nTask.main\n\n Task.main (dashboard_url:str, dashboard_username:str,\n            dashboard_api_key:str, storage_service_url:str,\n            storage_service_username:str, storage_service_password:str,\n            aws_access_key_id:str, aws_secret_access_key:str, task_id:str,\n            transfer_type:str, transfer_name:str, file_path:str,\n            location_uuid:str, processing_config:str, bucket_name:str,\n            transfer_source_prefix:str)\n\nメインの処理を実行する静的メソッド。ZIPファイルをS3にアップロードし、Maticaでの処理をトリガーする。\nArgs: 以下の引数は init メソッドと同様。 task_id (str): タスクID。 transfer_type (str): 転送タイプ。 transfer_name (str): 転送名。 file_path (str): ファイルパス。 location_uuid (str): 位置UUID。 processing_config (str): 処理設定。 bucket_name (str): バケット名。 transfer_source_prefix (str): 転送ソースプレフィックス。\nReturns: Optional[str]: 成功時には処理されたファイルのURLを返し、失敗時にはNoneを返す。",
+    "crumbs": [
+      "Task"
+    ]
+  }
+]
