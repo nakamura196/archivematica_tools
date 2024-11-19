@@ -13,33 +13,35 @@ class Task:
 
     def __init__(self, dashboard_url: str, dashboard_username: str, dashboard_api_key: str,
                  storage_service_url: str, storage_service_username: str, storage_service_password: str,
-                 aws_access_key_id: str, aws_secret_access_key: str):
+                 aws_access_key_id: str, aws_secret_access_key: str, aws_region: str):
         """
-        Task クラスのコンストラクタ。Matica APIとAWS S3クライアントの初期化を行う。
+        Constructor for the Task class. Initializes the Matica API client and the AWS S3 client.
 
         Args:
-            dashboard_url (str): MaticaダッシュボードのURL。
-            dashboard_username (str): Maticaダッシュボードのユーザー名。
-            dashboard_api_key (str): MaticaダッシュボードのAPIキー。
-            storage_service_url (str): ストレージサービスのURL。
-            storage_service_username (str): ストレージサービスのユーザー名。
-            storage_service_password (str): ストレージサービスのパスワード。
-            aws_access_key_id (str): AWSアクセスキーID。
-            aws_secret_access_key (str): AWSシークレットアクセスキー。
+            dashboard_url (str): URL for the Matica dashboard.
+            dashboard_username (str): Username for the Matica dashboard.
+            dashboard_api_key (str): API key for the Matica dashboard.
+            storage_service_url (str): URL for the storage service.
+            storage_service_username (str): Username for the storage service.
+            storage_service_password (str): Password for the storage service.
+            aws_access_key_id (str): AWS access key ID.
+            aws_secret_access_key (str): AWS secret access key.
+            aws_region (str): AWS region.
         """
         self.matica_client = ArchivematicaAPIClient(dashboard_url, dashboard_username, dashboard_api_key,
                                              storage_service_url, storage_service_username, storage_service_password)
-        self.aws_client = AwsClient(aws_access_key_id, aws_secret_access_key, "us-east-1")
+        self.aws_client = AwsClient(aws_access_key_id, aws_secret_access_key, aws_region)
 
     @staticmethod
     def ensure_slash_suffix(s: str) -> str:
-        """指定された文字列の末尾にスラッシュがなければ追加する
+        """
+        Ensures the specified string ends with a slash, adding one if it does not.
 
         Args:
-            s (str): 処理する文字列
+            s (str): The string to process.
 
         Returns:
-            str: 末尾にスラッシュが保証された文字列
+            str: The string guaranteed to end with a slash.
         """
         return s if s.endswith('/') else f'{s}/'
 
@@ -48,23 +50,24 @@ class Task:
              storage_service_url: str, storage_service_username: str, storage_service_password: str,
              aws_access_key_id: str, aws_secret_access_key: str, task_id: str, transfer_type: str, 
              transfer_name: str, file_path: str, location_uuid: str, processing_config: str, 
-             bucket_name: str, transfer_source_prefix: str) -> Optional[str]:
+             bucket_name: str, transfer_source_prefix: str, aws_region: str) -> Optional[str]:
         """
-        メインの処理を実行する静的メソッド。ZIPファイルをS3にアップロードし、Maticaでの処理をトリガーする。
+        Executes the main process. Uploads a ZIP file to S3, then triggers processing in Matica.
 
         Args:
-            以下の引数は __init__ メソッドと同様。
-            task_id (str): タスクID。
-            transfer_type (str): 転送タイプ。
-            transfer_name (str): 転送名。
-            file_path (str): ファイルパス。
-            location_uuid (str): 位置UUID。
-            processing_config (str): 処理設定。
-            bucket_name (str): バケット名。
-            transfer_source_prefix (str): 転送ソースプレフィックス。
+            The following arguments are similar to those in the __init__ method.
+            task_id (str): Task ID.
+            transfer_type (str): Transfer type.
+            transfer_name (str): Transfer name.
+            file_path (str): File path.
+            location_uuid (str): Location UUID.
+            processing_config (str): Processing configuration.
+            bucket_name (str): Bucket name.
+            transfer_source_prefix (str): Transfer source prefix.
+            aws_region (str): AWS region.
 
         Returns:
-            Optional[str]: 成功時には処理されたファイルのURLを返し、失敗時にはNoneを返す。
+            Optional[str]: The URL of the processed file if successful, None otherwise.
         """
         
         task = Task(dashboard_url, 
@@ -74,26 +77,22 @@ class Task:
         storage_service_username,
         storage_service_password,
         aws_access_key_id,
-        aws_secret_access_key)
+        aws_secret_access_key,
+        aws_region
+        )
 
         matica_client = task.matica_client
 
         transfer_source_prefix = Task.ensure_slash_suffix(transfer_source_prefix)
         s3_path = f"{transfer_source_prefix}{task_id}"
 
-        # bucket_name = "archivematica.aws.ldas.jp"
-        # bucket_name
-
         task.aws_client.upload_to_s3_zip(file_path, s3_path, bucket_name)
-
-        # location_uuid = "8ba875f0-0e78-4c98-a608-751a362e3194"
-        # processing_config = "automated"
 
         transfer_UUID = task.matica_client.v2beta_package(transfer_type, "", location_uuid, "/" + s3_path, transfer_name, processing_config)
 
         sip_UUID = matica_client.check_transfer_status(transfer_UUID)
         ingest_UUID = matica_client.ingest(sip_UUID)
 
-        url = "https://s3.amazonaws.com/" + bucket_name + matica_client.get_current_full_path(ingest_UUID)
+        url = f"https://s3.{aws_region}.amazonaws.com/{bucket_name}/{task.matica_client.get_current_full_path(ingest_UUID)}"
 
         return url

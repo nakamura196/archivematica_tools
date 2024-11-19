@@ -43,7 +43,7 @@ transfer_UUID = client.v2beta_package("standard", "", "bfe37714-61c2-432e-b375-a
 transfer_UUID
 ```
 
-    '42cb1fb3-e6c5-403d-b7d9-57180746d52b'
+    '68a1144e-2689-4b95-9eef-700d90d2e021'
 
 ### Delete transfers
 
@@ -52,7 +52,8 @@ res_transfer_completed = client.transfer_completed()
 res_transfer_completed
 ```
 
-    {'results': ['c0e3d7e5-217c-4d01-a4f4-6a9539d148b7'],
+    {'results': ['7bc40fbd-66f4-471c-82e4-e9ef4350cc2a',
+      'e9fd2aac-b612-4d0a-acbc-d28d9559fb00'],
      'message': 'Fetched completed transfers successfully.'}
 
 ``` python
@@ -60,7 +61,7 @@ res_transfer_delete = client.transfer_delete(res_transfer_completed["results"])
 res_transfer_delete
 ```
 
-    [{'removed': True}]
+    [{'removed': True}, {'removed': True}]
 
 ## Ingest
 
@@ -71,7 +72,41 @@ res_ingest_completed = client.ingest_completed()
 res_ingest_completed
 ```
 
-    {'results': ['a6a9f4fb-0499-423a-8a05-fcaa5896ad5d'],
+    {'results': ['03bb28e6-b2aa-4d7c-acb6-65c31d1c9998',
+      '0ce06558-f2cf-4c12-9b53-d1bdb684ab62',
+      '1460ff24-f7ea-4d94-9463-cfcd8a493a32',
+      '1d7fd234-b7c8-46bf-a8be-c3df890de8c2',
+      '2392fb45-3ada-48b5-b8f1-a8ad0e2f1c51',
+      '2d332284-a175-47b7-97a0-18d8f4f30045',
+      '2d48a73a-bfb6-48da-b723-de2c984751af',
+      '343a91c2-2b16-486a-a485-d239bfaac43f',
+      '373649c7-7a4b-4e4d-ae5d-4ab4f054ac0a',
+      '3f0d4caa-2191-4e5c-b140-0d07b2df0892',
+      '40297da5-2dee-4bb0-b886-1bd509c03d23',
+      '4253e2e3-60f9-4556-8a39-f55efce36c3a',
+      '603e0080-8c7b-431d-9820-08f613ebc105',
+      '6f655f81-fac9-4d47-8243-e4af61058404',
+      '769769f2-ccd4-4972-930e-5eb4f927f060',
+      '864ae4d5-c50d-4bde-a657-e28153f48ba2',
+      '9a659c99-1c0e-4110-9aec-73e2e698e7f0',
+      '9a668767-bb61-4d59-bc15-0bac33bc0ef8',
+      'ac3e20c5-fd43-4f3d-abe8-e1069cbd2ac7',
+      'b36dca11-9501-4f84-a852-4f8d6466ee4d',
+      'b389e77a-2153-457d-bbf9-b2c4d755be88',
+      'b3b8da80-91d1-46ce-a56c-1a8bd8497999',
+      'b908c135-c07a-439e-8e69-eace35f4052e',
+      'bd35939f-a1c1-43eb-aebc-33b29d325831',
+      'c03eaaf2-e5ac-4ea8-9aba-b2b92c2efcd5',
+      'cb866630-e444-47c6-b94c-662e8849f6da',
+      'd1fbe8ec-b050-449f-b6d1-99e30397bea9',
+      'd648478a-4960-4568-96cb-57669d7c10d0',
+      'dabb707d-e860-45f5-a388-5f1291af8d73',
+      'e38b64d7-1386-4032-97a9-faacf945495b',
+      'e4278795-32f7-4aa9-b150-e354efae03f1',
+      'e5e48d8a-421a-461d-8e55-468bf37253a8',
+      'f5495cf3-d86b-4e63-8554-841f636cfda3',
+      'f6decddd-2af3-4b22-82b7-b8a5d8eaefa2',
+      'f9eb5641-cb65-4af7-8e0e-3d9958a6f098'],
      'message': 'Fetched completed ingests successfully.'}
 
 ``` python
@@ -79,16 +114,71 @@ res_ingest_delete = client.ingest_delete(res_ingest_completed["results"])
 res_ingest_delete
 ```
 
-    [{'removed': True}]
+    [{'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True},
+     {'removed': True}]
 
 ## Storage Service
 
 ### Package
 
 ``` python
-# res_v2_file = client.v2_file(size=100)
-# res_v2_file
+res_v2_file = client.v2_file(size=1)
+res_v2_file
 ```
+
+    {'meta': {'limit': 1,
+      'next': '/api/v2/file/?limit=1&offset=1',
+      'offset': 0,
+      'previous': None,
+      'total_count': 61},
+     'objects': [{'current_full_path': '/aip_storage/4165/45e4/ab5e/4488/90e6/fe34/f624/2cbe/Japanse_Example-416545e4-ab5e-4488-90e6-fe34f6242cbe.7z',
+       'current_location': '/api/v2/location/3a68b7d6-d9ce-4f83-9772-d66560f2bb8c/',
+       'current_path': '4165/45e4/ab5e/4488/90e6/fe34/f624/2cbe/Japanse_Example-416545e4-ab5e-4488-90e6-fe34f6242cbe.7z',
+       'encrypted': False,
+       'misc_attributes': {},
+       'origin_pipeline': '/api/v2/pipeline/342468f7-17ca-440a-bcb2-fd594795db8f/',
+       'package_type': 'AIP',
+       'related_packages': [],
+       'replicas': [],
+       'replicated_package': None,
+       'resource_uri': '/api/v2/file/416545e4-ab5e-4488-90e6-fe34f6242cbe/',
+       'size': 64921,
+       'status': 'UPLOADED',
+       'stored_date': '2024-06-18T23:09:26.471782',
+       'uuid': '416545e4-ab5e-4488-90e6-fe34f6242cbe'}]}
 
 ``` python
 pipeline = "628f82bd-4ec2-4643-b85d-fd8e1db84c27"
@@ -98,28 +188,31 @@ event_reason = "demo"
 ```
 
 ``` python
-'''
 fileUUIDs = []
 for objct in res_v2_file["objects"]:
     fileUUIDs.append(objct["uuid"])
 
-# res_v2_file_delete = client.v2_file_delete_aip(fileUUIDs, event_reason, pipeline, user_id, user_email)
-# res_v2_file_delete
-'''
+res_v2_file_delete = client.v2_file_delete_aip(fileUUIDs, event_reason, pipeline, user_id, user_email)
+res_v2_file_delete
 ```
 
+    100%|██████████| 1/1 [00:00<00:00,  1.89it/s]
+
+    [{'error_message': 'Pipeline matching query does not exist.',
+      'traceback': 'Traceback (most recent call last):\n\n  File "/pyenv/data/versions/3.9.20/lib/python3.9/site-packages/tastypie/resources.py", line 221, in wrapper\n    response = callback(request, *args, **kwargs)\n\n  File "/src/storage_service/locations/api/resources.py", line 194, in wrapper\n    result = func(resource, request, bundle, **kwargs)\n\n  File "/src/storage_service/locations/api/resources.py", line 1250, in delete_aip_request\n    (status_code, response) = self._attempt_package_request_event(\n\n  File "/src/storage_service/locations/api/resources.py", line 1776, in _attempt_package_request_event\n    pipeline = Pipeline.objects.get(uuid=request_info["pipeline"])\n\n  File "/pyenv/data/versions/3.9.20/lib/python3.9/site-packages/django/db/models/manager.py", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n\n  File "/pyenv/data/versions/3.9.20/lib/python3.9/site-packages/django/db/models/query.py", line 637, in get\n    raise self.model.DoesNotExist(\n\nlocations.models.pipeline.Pipeline.DoesNotExist: Pipeline matching query does not exist.\n'}]
+
 ``` python
-'''
 fileUUIDs = []
 for objct in res_v2_file["objects"]:
     fileUUIDs.append(objct["uuid"])
 
 res_v2_file_delete = client.v2_file_delete(fileUUIDs)
 res_v2_file_delete
-'''
 ```
 
-    '\nfileUUIDs = []\nfor objct in res_v2_file["objects"]:\n    fileUUIDs.append(objct["uuid"])\n\nres_v2_file_delete = client.v2_file_delete(fileUUIDs)\nres_v2_file_delete\n'
+    100%|██████████| 1/1 [00:00<00:00,  1.48it/s]
+
+    [{'file_UUID': '416545e4-ab5e-4488-90e6-fe34f6242cbe', 'status': 'success'}]
 
 See [the
 documentation](https://nakamura196.github.io/archivematica_tools/api.html)
