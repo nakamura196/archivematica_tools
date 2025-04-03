@@ -20,16 +20,20 @@ class VisClient:
     """
 
     @staticmethod
-    def main(uuid):
+    def main(uuid, env_path=None):
         """
         Main function to visualize an AIP.
 
         Args:
             uuid: The UUID of the AIP to visualize.
-
+            env_path: The path to the environment file.
         Returns:
         """
-        load_dotenv(override=True)
+
+        if env_path:
+            load_dotenv(override=True, dotenv_path=env_path)
+        else:
+            load_dotenv(override=True)
 
         endpoint_url = os.getenv("OS_ENDPOINT")
         aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")

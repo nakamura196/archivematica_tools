@@ -317,18 +317,26 @@ class ArchivematicaAPIClient(object):
         return sip_uuid
         
     @staticmethod
-    def main(transfer_type, transfer_accession, location_uuid, path, name, processing_config):
+    def main(transfer_type, transfer_accession, location_uuid, path, name, processing_config, env_path=None):
         """
         Main function to orchestrate the file transfer, ingestion, and deletion processes.
 
         Args:
             transfer_type: The type of the transfer.
             transfer_accession: The accession number for the transfer.
+            location_uuid: The UUID of the location.
+            path: The path to the file to transfer.
+            name: The name of the file to transfer.
+            processing_config: The processing configuration to use.
+            env_path: The path to the environment variables file.
 
         Returns:
             The UUID of the ingested AIP.
         """
-        load_dotenv(override=True)
+        if env_path:
+            load_dotenv(override=True, dotenv_path=env_path)
+        else:
+            load_dotenv(override=True)
 
         dashboard_url = os.environ.get("DASHBOARD_URL")
         dashboard_username = os.environ.get("DASHBOARD_USERNAME")
