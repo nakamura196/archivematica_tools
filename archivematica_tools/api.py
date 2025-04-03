@@ -10,6 +10,8 @@ import time
 from requests.auth import HTTPBasicAuth
 from typing import Optional, Dict
 from tqdm import tqdm
+from dotenv import load_dotenv
+import os
 
 # %% ../nbs/api.ipynb 4
 class ArchivematicaAPIClient(object):
@@ -295,4 +297,51 @@ class ArchivematicaAPIClient(object):
         except requests.RequestException as e:
             print(f"Error retrieving current full path: {e}")
             return None
+        
+    def check_status(self, transfer_UUID):
+        """
+        Checks the status of a file transfer until it is no longer processing.
+
+        Args:
+            transfer_UUID: The UUID of the transfer to check.
+
+        Returns:
+            The UUID of the ingested AIP.
+        """
+        print("transfer ...")
+        sip_uuid = self.check_transfer_status(transfer_UUID)
+
+        print("ingest ...")
+        self.ingest(sip_uuid)
+
+        return sip_uuid
+        
+    @staticmethod
+    def main(transfer_type, transfer_accession, location_uuid, path, name, processing_config):
+        """
+        Main function to orchestrate the file transfer, ingestion, and deletion processes.
+
+        Args:
+            transfer_type: The type of the transfer.
+            transfer_accession: The accession number for the transfer.
+
+        Returns:
+            The UUID of the ingested AIP.
+        """
+        load_dotenv(override=True)
+
+        dashboard_url = os.environ.get("DASHBOARD_URL")
+        dashboard_username = os.environ.get("DASHBOARD_USERNAME")
+        dashboard_api_key = os.environ.get("DASHBOARD_API_KEY")
+
+        storage_service_url = os.environ.get("STORAGE_SERVICE_URL")
+        storage_service_username = os.environ.get("STORAGE_SERVICE_USERNAME")
+        storage_service_password = os.environ.get("STORAGE_SERVICE_PASSWORD")
+
+        client = ArchivematicaAPIClient(dashboard_url, dashboard_username, dashboard_api_key, storage_service_url, storage_service_username, storage_service_password)
+
+        transfer_UUID = client.v2beta_package(transfer_type, transfer_accession, location_uuid, path, name, processing_config)
+        sip_uuid = client.check_status(transfer_UUID)
+
+        return sip_uuid
 
