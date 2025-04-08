@@ -4,4 +4,4 @@ nbdev
 python-dotenv
 tqdm
 py7zr
-git+https://github.com/nakamura196/mets_tools.git
+mets-tools==0.0.1
