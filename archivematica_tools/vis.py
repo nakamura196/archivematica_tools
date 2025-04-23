@@ -76,20 +76,20 @@ class VisClient:
         ins.parse_mets()
 
         return ins
-
-    def download_data(self, uuid, bucket_name, zip_dir = "./zip_dir", extract_dir = './extracted_files'):
+    
+    def download_zip(self, uuid, bucket_name, zip_dir = "./zip_dir"):
         """
-        Download the data for an AIP.
+        Download the zip file for an AIP.
 
         Args:
             uuid: The UUID of the AIP to download.
             bucket_name: The name of the bucket.
             zip_dir: The directory to save the zip file.
-            extract_dir: The directory to save the extracted files.
 
         Returns:
-            The path to the extracted METS file.
+            The path to the zip file.
         """
+
         uuid_cleaned = uuid.replace('-', '')
         chunks_cleaned = [uuid_cleaned[i:i+4] for i in range(0, len(uuid_cleaned), 4)]
         # chunks_cleaned
@@ -127,6 +127,26 @@ class VisClient:
         # S3からファイルをダウンロード
         s3_client.download_file(bucket_name, s3_key, local_file)
         print(f"ファイル {local_file} をダウンロードしました。")
+
+        # pass
+
+        return local_file, s3_key
+
+    def download_data(self, uuid, bucket_name, zip_dir = "./zip_dir", extract_dir = './extracted_files'):
+        """
+        Download the data for an AIP.
+
+        Args:
+            uuid: The UUID of the AIP to download.
+            bucket_name: The name of the bucket.
+            zip_dir: The directory to save the zip file.
+            extract_dir: The directory to save the extracted files.
+
+        Returns:
+            The path to the extracted METS file.
+        """
+        
+        local_file, s3_key = self.download_zip(uuid, bucket_name, zip_dir)
         
         # 展開先のディレクトリを指定
         
